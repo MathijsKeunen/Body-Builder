@@ -1,7 +1,8 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
-[ext_resource path="res://VeinController.tscn" type="PackedScene" id=1]
+[ext_resource path="res://VeinNet.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Organ.tscn" type="PackedScene" id=2]
+[ext_resource path="res://VeinController.gd" type="Script" id=3]
 [ext_resource path="res://assets/lung.png" type="Texture" id=4]
 
 [sub_resource type="AtlasTexture" id=1]
@@ -64,19 +65,28 @@ animations = [ {
 
 [node name="Main" type="Node2D"]
 
-[node name="VeinController" parent="." instance=ExtResource( 1 )]
+[node name="VeinController" type="Node2D" parent="."]
+script = ExtResource( 3 )
 
-[node name="Heart" parent="." instance=ExtResource( 2 )]
+[node name="Red" parent="VeinController" instance=ExtResource( 1 )]
+
+[node name="Blue" parent="VeinController" instance=ExtResource( 1 )]
+net_number = 1
+color = Color( 0, 0, 0.505882, 1 )
+
+[node name="Organs" type="Node2D" parent="."]
+
+[node name="Heart" parent="Organs" instance=ExtResource( 2 )]
 position = Vector2( 555.428, 291.109 )
-points = PoolVector2Array( -23, -75 )
+points = PoolVector2Array( -23, -75, -52.8936, -68.7952 )
 
-[node name="Organ" parent="." instance=ExtResource( 2 )]
+[node name="Lungs" parent="Organs" instance=ExtResource( 2 )]
 position = Vector2( 118.928, 245.407 )
-points = PoolVector2Array( 1, 33 )
+points = PoolVector2Array( 1, 33, -17.4778, -46.7576 )
 
-[node name="Organ" parent="Organ" index="0"]
+[node name="Organ" parent="Organs/Lungs" index="0"]
 frames = SubResource( 11 )
 animation = "default"
-frame = 6
+frame = 9
 
-[editable path="Organ"]
+[editable path="Organs/Lungs"]

@@ -20,14 +20,14 @@ _global_script_classes=[ {
 "path": "res://Vein.gd"
 }, {
 "base": "Node2D",
-"class": "VeinController",
+"class": "VeinNet",
 "language": "GDScript",
-"path": "res://VeinController.gd"
+"path": "res://VeinNet.gd"
 } ]
 _global_script_class_icons={
 "Organ": "",
 "Vein": "",
-"VeinController": ""
+"VeinNet": ""
 }
 
 [application]

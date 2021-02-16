@@ -7,7 +7,7 @@ var dummy_index: int = -1 setget set_dummy_index, get_dummy_index
 var indices: Array setget , get_indices
 
 func _ready():
-	default_color = Color(randf(), randf(), randf())
+#	default_color = Color(randf(), randf(), randf())
 	set_dummy_index(-1)
 
 func set_start_index(i: int) -> void:

@@ -34,10 +34,11 @@ animations = [ {
 [node name="Organ" type="Line2D" groups=[
 "organ",
 ]]
+width = 0.0
 script = ExtResource( 1 )
 
 [node name="Organ" type="AnimatedSprite" parent="."]
 frames = SubResource( 5 )
 animation = "working"
-frame = 3
+frame = 1
 playing = true
