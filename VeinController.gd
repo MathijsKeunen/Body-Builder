@@ -2,13 +2,15 @@ extends Node2D
 class_name VeinController
 
 const snap_distance = pow(15, 2)
-const MIN_LENGTH = 5
+const MIN_LENGTH = 10
 
 export (int) var net_number = 0
 
-var active_vein: Line2D
+var active_vein: Vein
 var current_index: int
-var astar_index: int
+
+onready var cut_line := $cut_line
+
 var organ_connections: Dictionary
 
 var vein_scene = preload("res://Vein.tscn")
@@ -22,34 +24,40 @@ func _ready():
 		var p = _add_point(point)
 		organ_connections[p] = organ
 		organ.set_astar_index(net_number, p)
-#	for vein in get_children():
-#		if vein is Line2D:
-#			var a := _add_point(vein.points[0])
-#			var b := _add_point(vein.points[-1])
-#			astar.connect_points(a, b)
-#			vein.start_index = a
-#			vein.end_index = b
 
 
 func _unhandled_input(event: InputEvent):
 	if event is InputEventMouseButton:
-		if event.pressed:
-			var result = _get_closest_point(event.global_position)
-			var connection = result[0]
-			if connection is Organ:
-				var p = connection.get_astar_index(net_number)
-				var point = astar.get_point_position(p)
-				active_vein = _new_vein(point, p)
-				current_index = -1
-			else:
-				active_vein = connection
-				current_index = result[1]
+		active_vein = null
+		if event.button_index == BUTTON_LEFT:
+			if event.pressed:
+				var result = _get_closest_point(event.global_position)
+				var connection = result[0]
+				if connection is Organ:
+					var p = connection.get_astar_index(net_number)
+					var point = astar.get_point_position(p)
+					active_vein = _new_vein(point, p)
+					current_index = -1
+				else:
+					active_vein = connection
+					current_index = result[1]
+			
+#			else:
+#				active_vein = null
 		
-		else:
-			active_vein = null
+		elif event.button_index == BUTTON_RIGHT:
+			if event.pressed:
+				cut_line.add_point(event.global_position)
+			else:
+				_cut_veins(cut_line)
+				cut_line.clear_points()
 	
-	elif event is InputEventMouseMotion and event.pressure > 0:
-		if active_vein:
+	elif event is InputEventMouseMotion:
+		if event.button_mask == BUTTON_MASK_RIGHT:
+			var mouse_position = event.global_position
+			if cut_line.points[-1].distance_squared_to(mouse_position) > snap_distance:
+				cut_line.add_point(mouse_position)
+		elif event.button_mask == BUTTON_MASK_LEFT and active_vein:
 			# New vein started in the middle of another vein
 			if current_index > 0:
 				# Split the other vein in two smaller veins
@@ -106,7 +114,7 @@ func _unhandled_input(event: InputEvent):
 					astar.set_point_position(p, new_position)
 
 
-func _get_closest_point(point: Vector2) -> Array:
+func _get_closest_point(point: Vector2, with_endpoints:=true) -> Array:
 	"""
 	Finds a point in an existing vein that is within the snap_distance from the
 	given point. If there is no such point, returns [null, -1].
@@ -118,18 +126,20 @@ func _get_closest_point(point: Vector2) -> Array:
 	given point, returns a point of the first vein in get_children().
 	The return value is a list with the vein and the index of the found point.
 	"""
-	for p in organ_connections.keys():
-		var connection = astar.get_point_position(p)
-		if connection.distance_squared_to(point) < snap_distance:
-			return [organ_connections[p], -1]
+	if with_endpoints:
+		for p in organ_connections.keys():
+			var connection = astar.get_point_position(p)
+			if connection.distance_squared_to(point) < snap_distance:
+				return [organ_connections[p], -1]
 	for vein in self.get_children():
-		if vein is Line2D:
+		if vein is Vein:
 			var points: PoolVector2Array = vein.get_points()
-			# Check endpoints
-			if points[0].distance_squared_to(point) < snap_distance:
-				return [vein, 0]
-			if points[-1].distance_squared_to(point) < snap_distance:
-				return [vein, -1]
+			if with_endpoints:
+				# Check endpoints
+				if points[0].distance_squared_to(point) < snap_distance:
+					return [vein, 0]
+				if points[-1].distance_squared_to(point) < snap_distance:
+					return [vein,-1]
 			
 			# Check non-endpoints
 			var best_point_index = -1
@@ -145,7 +155,7 @@ func _get_closest_point(point: Vector2) -> Array:
 	return [null, -1]
 
 
-func _endable(old: Line2D, old_index: int, new: Line2D, new_index: int) -> bool:
+func _endable(old: Line2D, old_index: int, new: Vein, new_index: int) -> bool:
 	if not old:
 		return false
 	if old_index > 0:
@@ -158,7 +168,7 @@ func _endable(old: Line2D, old_index: int, new: Line2D, new_index: int) -> bool:
 	return new.points.size() >= MIN_LENGTH
 
 
-func _split_vein(vein: Line2D, p: int) -> Array:
+func _split_vein(vein: Vein, p: int) -> Array:
 	"""
 	Splits the given vein in two at position p. The two new veins both contain
 	the point at index p.
@@ -173,7 +183,7 @@ func _split_vein(vein: Line2D, p: int) -> Array:
 	return [vein_start, vein_end]
 
 
-func _join_veins(first: Line2D, first_direction: int, second: Line2D, second_direction: int) -> void:
+func _join_veins(first: Vein, first_direction: int, second: Vein, second_direction: int) -> void:
 	"""
 	Joins the two given veins together. The directions indicate which end of the
 	points arrays should be joined, 0 means the left side, -1 the right side.
@@ -211,7 +221,7 @@ func _add_point(point: Vector2) -> int:
 	astar.add_point(i, point)
 	return i
 
-func _add_vein(vein: Line2D) -> void:
+func _add_vein(vein: Vein) -> void:
 	add_child(vein)
 	var start = vein.start_index
 	var end = vein.end_index
@@ -225,10 +235,8 @@ func _add_vein(vein: Line2D) -> void:
 			astar.connect_points(start, end)
 
 
-func _remove_vein(vein: Line2D) -> void:
+func _remove_vein(vein: Vein) -> void:
 	remove_child(vein)
-	if vein is Organ:
-		print("removed an organ")
 	var start = vein.start_index
 	var end = vein.end_index
 	var dummy = vein.dummy_index
@@ -244,7 +252,7 @@ func _remove_vein(vein: Line2D) -> void:
 				astar.remove_point(p)
 
 
-func _new_vein(point: Vector2, p: int) -> Line2D:
+func _new_vein(point: Vector2, p: int) -> Vein:
 	var new_vein = vein_scene.instance()
 	new_vein.add_point(point)
 	new_vein.start_index = p
@@ -253,7 +261,7 @@ func _new_vein(point: Vector2, p: int) -> Line2D:
 	return new_vein
 
 
-func _branch_vein(vein: Line2D, index: int) -> Line2D:
+func _branch_vein(vein: Vein, index: int) -> Vein:
 	var point = vein.points[index]
 	var p = _add_point(point)
 	var new_vein = _new_vein(point, p)
@@ -272,7 +280,7 @@ func _branch_vein(vein: Line2D, index: int) -> Line2D:
 	return new_vein
 
 
-func _merge_veins(new: Line2D, direction: int, old: Line2D, index: int) -> void:
+func _merge_veins(new: Vein, direction: int, old: Vein, index: int) -> void:
 	var point = old.points[index]
 	new.add_point(point, direction)
 	var p = new.start_index if direction == 0 else new.end_index
@@ -304,9 +312,26 @@ func _connect_to_organ(vein: Vein, direction: int, organ: Organ) -> void:
 	_remove_vein(vein)
 
 
+func _cut_veins(cut: Line2D) -> void:
+	for point in cut.points:
+		var result := _get_closest_point(point, false)
+		var vein: Vein = result[0]
+		if vein:
+			_remove_vein(vein)
+	for vein in get_children():
+		if vein is Vein:
+			var p = vein.start_index
+			var connected := false
+			for o in organ_connections.keys():
+				if p == o or astar.get_id_path(p, o).size() > 0:
+					connected = true
+			if not connected:
+				_remove_vein(vein)
+
+
 func _check_connections():
 	for vein in get_children():
-		if vein is Line2D:
+		if vein is Vein:
 			var start = vein.start_index
 			var end = vein.end_index
 			var dummy = vein.dummy_index

@@ -77,6 +77,6 @@ points = PoolVector2Array( 1, 33 )
 [node name="Organ" parent="Organ" index="0"]
 frames = SubResource( 11 )
 animation = "default"
-frame = 5
+frame = 6
 
 [editable path="Organ"]

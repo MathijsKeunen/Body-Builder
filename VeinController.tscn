@@ -28,5 +28,7 @@ text = "print connections"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="cut_line" type="Line2D" parent="."]
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_check_connections"]
 [connection signal="pressed" from="VBoxContainer/Button2" to="." method="_print_connections"]
