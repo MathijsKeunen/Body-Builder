@@ -1,0 +1,40 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Line2D",
+"class": "Organ",
+"language": "GDScript",
+"path": "res://Organ.gd"
+}, {
+"base": "Line2D",
+"class": "Vein",
+"language": "GDScript",
+"path": "res://Vein.gd"
+}, {
+"base": "Node2D",
+"class": "VeinController",
+"language": "GDScript",
+"path": "res://VeinController.gd"
+} ]
+_global_script_class_icons={
+"Organ": "",
+"Vein": "",
+"VeinController": ""
+}
+
+[application]
+
+config/name="Body Builder"
+config/icon="res://icon.png"
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
