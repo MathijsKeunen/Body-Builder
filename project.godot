@@ -20,19 +20,26 @@ _global_script_classes=[ {
 "path": "res://Vein.gd"
 }, {
 "base": "Node2D",
-"class": "VeinNet",
+"class": "Veins",
 "language": "GDScript",
-"path": "res://VeinNet.gd"
+"path": "res://Veins.gd"
+}, {
+"base": "AnimatedSprite",
+"class": "Virus",
+"language": "GDScript",
+"path": "res://Virus.gd"
 } ]
 _global_script_class_icons={
 "Organ": "",
 "Vein": "",
-"VeinNet": ""
+"Veins": "",
+"Virus": ""
 }
 
 [application]
 
 config/name="Body Builder"
+run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
 
 [rendering]
