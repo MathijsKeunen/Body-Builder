@@ -31,7 +31,7 @@ func _unhandled_input(event: InputEvent):
 		active_vein = null
 		if event.button_index == BUTTON_LEFT:
 			if event.pressed:
-				var result = _get_closest_point(event.global_position)
+				var result = _get_closest_point(event.position)
 				var connection = result[0]
 				if connection is Organ:
 					var p = connection.get_astar_index(net_number)
@@ -41,20 +41,17 @@ func _unhandled_input(event: InputEvent):
 				else:
 					active_vein = connection
 					current_index = result[1]
-			
-#			else:
-#				active_vein = null
 		
 		elif event.button_index == BUTTON_RIGHT:
 			if event.pressed:
-				cut_line.add_point(event.global_position)
+				cut_line.add_point(event.position)
 			else:
 				_cut_veins(cut_line)
 				cut_line.clear_points()
 	
 	elif event is InputEventMouseMotion:
 		if event.button_mask == BUTTON_MASK_RIGHT:
-			var mouse_position = event.global_position
+			var mouse_position = event.position
 			if cut_line.points[-1].distance_squared_to(mouse_position) > snap_distance:
 				cut_line.add_point(mouse_position)
 		
@@ -72,7 +69,7 @@ func _unhandled_input(event: InputEvent):
 					current_index = -1
 			# Check if the active vein should be ended (= connected to an
 			# existing vein)
-			var mouse_position = event.global_position
+			var mouse_position = event.position
 			var result = _get_closest_point(mouse_position)
 			var closest_connection = result[0]
 			if _endable(closest_connection, result[1], active_vein, current_index):
@@ -115,7 +112,7 @@ func _unhandled_input(event: InputEvent):
 				# on the speed of the mouse
 				var last_point = active_vein.points[current_index]
 				if last_point.distance_squared_to(mouse_position) >= snap_distance:
-					var new_position = event.global_position
+					var new_position = event.position
 					active_vein.add_point(new_position, current_index)
 					var p = active_vein.get_indices()[current_index]
 					astar.set_point_position(p, new_position)

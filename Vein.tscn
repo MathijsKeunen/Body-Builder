@@ -3,7 +3,7 @@
 [ext_resource path="res://Vein.gd" type="Script" id=1]
 
 [node name="Vein" type="Line2D"]
-width = 30.0
+width = 20.0
 default_color = Color( 0.760784, 0.0666667, 0.0666667, 1 )
 joint_mode = 2
 begin_cap_mode = 2
