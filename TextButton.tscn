@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Play.gd" type="Script" id=1]
+[ext_resource path="res://assets/font/dynamicfont_small.tres" type="DynamicFont" id=2]
+
+[node name="TextButton" type="Button"]
+margin_right = 144.0
+margin_bottom = 64.0
+custom_fonts/font = ExtResource( 2 )
+text = "TextButton"
+flat = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="button_down" from="." to="." method="_on_TextButton_button_down"]
+[connection signal="button_up" from="." to="." method="_on_TextButton_button_up"]
+[connection signal="mouse_entered" from="." to="." method="_on_Play_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_Play_mouse_exited"]

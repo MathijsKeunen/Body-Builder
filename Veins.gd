@@ -1,9 +1,10 @@
 extends Node2D
 class_name Veins
 
-const snap_distance = pow(15, 2)
-const cut_segemt_size = pow(5, 2)
-const MIN_LENGTH = 10
+const snap_distance = pow(20, 2)
+const cut_segemt_size = 10
+const vein_segment_size = 10
+const MIN_LENGTH = 100
 
 onready var net_number = get_parent().net_number
 
@@ -53,8 +54,12 @@ func _unhandled_input(event: InputEvent):
 	elif event is InputEventMouseMotion:
 		if event.button_mask == BUTTON_MASK_RIGHT:
 			var mouse_position = event.position
-			if cut_line.points[-1].distance_squared_to(mouse_position) > cut_segemt_size:
-				cut_line.add_point(mouse_position)
+			var last_point = cut_line.points[-1]
+			var delta = (mouse_position - last_point).normalized() * cut_segemt_size
+			var distance = last_point.distance_to(mouse_position)
+			for i in range(int(distance / cut_segemt_size) - 1, -1, -1):
+				var new_position = mouse_position - i * delta
+				cut_line.add_point(new_position, current_index)
 		
 		elif event.button_mask == BUTTON_MASK_LEFT and active_vein:
 			# New vein started in the middle of another vein
@@ -112,11 +117,13 @@ func _unhandled_input(event: InputEvent):
 				# large enough. This way, the amount of points is less dependend
 				# on the speed of the mouse
 				var last_point = active_vein.points[current_index]
-				if last_point.distance_squared_to(mouse_position) >= snap_distance:
-					var new_position = event.position
+				var delta = (mouse_position - last_point).normalized() * vein_segment_size
+				var distance = last_point.distance_to(mouse_position)
+				for i in range(int(distance / vein_segment_size) - 1, -1, -1):
+					var new_position = mouse_position - i * delta
 					active_vein.add_point(new_position, current_index)
-					var p = active_vein.get_indices()[current_index]
-					astar.set_point_position(p, new_position)
+				var p = active_vein.get_indices()[current_index]
+				astar.set_point_position(p, active_vein.points[current_index])
 
 
 func _get_closest_point(point: Vector2, with_endpoints:=true) -> Array:
@@ -144,7 +151,7 @@ func _get_closest_point(point: Vector2, with_endpoints:=true) -> Array:
 				if points[0].distance_squared_to(point) < snap_distance:
 					return [vein, 0]
 				if points[-1].distance_squared_to(point) < snap_distance:
-					return [vein,-1]
+					return [vein, -1]
 			
 			# Check non-endpoints
 			var best_point_index = -1

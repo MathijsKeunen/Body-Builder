@@ -1,0 +1,84 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://default_theme.tres" type="Theme" id=1]
+[ext_resource path="res://StartMenu.gd" type="Script" id=2]
+[ext_resource path="res://TextButton.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/background.png" type="Texture" id=4]
+
+[node name="StartMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 4 )
+centered = false
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+margin_left = 888.0
+margin_top = 440.0
+margin_right = 1032.0
+margin_bottom = 640.0
+
+[node name="Play" parent="CenterContainer/VBoxContainer" instance=ExtResource( 3 )]
+text = "Play"
+
+[node name="Help" parent="CenterContainer/VBoxContainer" instance=ExtResource( 3 )]
+margin_top = 68.0
+margin_bottom = 132.0
+text = "Help"
+
+[node name="Quit" parent="CenterContainer/VBoxContainer" instance=ExtResource( 3 )]
+margin_top = 136.0
+margin_bottom = 200.0
+text = "Quit"
+
+[node name="CenterContainer2" type="CenterContainer" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer2"]
+margin_left = 710.0
+margin_top = 306.0
+margin_right = 1210.0
+margin_bottom = 774.0
+
+[node name="Back" parent="CenterContainer2/VBoxContainer" instance=ExtResource( 3 )]
+margin_right = 500.0
+text = "Back"
+
+[node name="TextEdit" type="TextEdit" parent="CenterContainer2/VBoxContainer"]
+margin_top = 68.0
+margin_right = 500.0
+margin_bottom = 468.0
+rect_min_size = Vector2( 500, 400 )
+text = "Connect all organs to the heart by drawing blood veins with the left mouse button. Make sure to connect both the red and the blue vein so the blood can circulate.
+
+Watch out for viruses! When a virus reaches an organ, it will be damaged. To prevent that, cut of the infected veins with the right mouse button.
+
+Try to keep the organs alive as long as possible. Take extra care of the heart because the other organs can't survive without it!"
+readonly = true
+context_menu_enabled = false
+shortcut_keys_enabled = false
+virtual_keyboard_enabled = false
+selecting_enabled = false
+wrap_enabled = true
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Play" to="." method="_on_Play_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Help" to="." method="_on_Help_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Quit" to="." method="_on_Quit_pressed"]
+[connection signal="pressed" from="CenterContainer2/VBoxContainer/Back" to="." method="_on_Back_pressed"]
