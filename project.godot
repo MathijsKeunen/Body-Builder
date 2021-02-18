@@ -20,6 +20,11 @@ _global_script_classes=[ {
 "path": "res://Vein.gd"
 }, {
 "base": "Node2D",
+"class": "VeinNet",
+"language": "GDScript",
+"path": "res://VeinNet.gd"
+}, {
+"base": "Node2D",
 "class": "Veins",
 "language": "GDScript",
 "path": "res://Veins.gd"
@@ -32,6 +37,7 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "Organ": "",
 "Vein": "",
+"VeinNet": "",
 "Veins": "",
 "Virus": ""
 }

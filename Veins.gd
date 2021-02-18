@@ -2,6 +2,7 @@ extends Node2D
 class_name Veins
 
 const snap_distance = pow(15, 2)
+const cut_segemt_size = pow(5, 2)
 const MIN_LENGTH = 10
 
 onready var net_number = get_parent().net_number
@@ -52,7 +53,7 @@ func _unhandled_input(event: InputEvent):
 	elif event is InputEventMouseMotion:
 		if event.button_mask == BUTTON_MASK_RIGHT:
 			var mouse_position = event.position
-			if cut_line.points[-1].distance_squared_to(mouse_position) > snap_distance:
+			if cut_line.points[-1].distance_squared_to(mouse_position) > cut_segemt_size:
 				cut_line.add_point(mouse_position)
 		
 		elif event.button_mask == BUTTON_MASK_LEFT and active_vein:
@@ -148,7 +149,7 @@ func _get_closest_point(point: Vector2, with_endpoints:=true) -> Array:
 			# Check non-endpoints
 			var best_point_index = -1
 			var shortest_d: float
-			for p in range(1, points.size() - 1):
+			for p in range(points.size()):
 				var d = points[p].distance_squared_to(point)
 				if d < snap_distance and (d < shortest_d or best_point_index < 0):
 					best_point_index = p
@@ -406,17 +407,25 @@ func reparent_virus(virus: Virus):
 	else:
 		print("failed to reparent virus")
 	
-	var connections: Array
-	for vein in get_children():
-		if vein is Vein:
-			if vein.start_index == p or vein.end_index == p and vein != parent:
-				connections.append(vein)
-	if connections.empty():
-		virus.direction = - virus.direction
+	if p in organ_connections.keys():
+		var organ = organ_connections[p]
+		if organ.is_alive():
+			organ.do_damage()
+			parent.remove_child(virus)
+	
 	else:
-		var new: Vein = connections[randi() % connections.size()]
-		parent.remove_child(virus)
-		var index = 0 if new.start_index == p else new.points.size() - 1
+# warning-ignore:unassigned_variable
+		var connections: Array
+		for vein in get_children():
+			if vein is Vein:
+				if vein.start_index == p or vein.end_index == p and vein != parent:
+					connections.append(vein)
+		if connections.empty():
+			virus.direction = - virus.direction
+		else:
+			var new: Vein = connections[randi() % connections.size()]
+			parent.remove_child(virus)
+			var index = 0 if new.start_index == p else new.points.size() - 1
 
-		new.add_virus(virus, index)
-	virus.move()
+			new.add_virus(virus, index)
+		virus.move()

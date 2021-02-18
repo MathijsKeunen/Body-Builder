@@ -8,7 +8,7 @@ var end_index: int setget set_end_index, get_end_index
 var dummy_index: int = -1 setget set_dummy_index, get_dummy_index
 var indices: Array setget , get_indices
 
-const spawn_chance: float = 0.0001
+const spawn_chance: float = 0.001
 
 func _ready():
 	set_dummy_index(-1)
@@ -40,7 +40,8 @@ func get_indices() -> Array:
 func _process(_delta):
 	$start.position = points[0]
 	$end.position = points[-1]
-	$dummy.position = points[round(points.size() / 2)]
+# warning-ignore:integer_division
+	$dummy.position = points[points.size() / 2]
 	if randf() < spawn_chance:
 		_spawn_virus()
 
@@ -61,5 +62,7 @@ func add_virus(virus: Virus, p: int, direction = 0):
 	elif p == -1 or p == points.size() - 1:
 		virus.direction = -1
 	else:
-		virus.direction = randi() % 2
+		virus.direction = 1 - 2 * (randi() % 2)
+	if virus.direction == 0:
+		print("invalid direction")
 	add_child(virus)
