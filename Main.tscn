@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://VeinNet.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Organ.tscn" type="PackedScene" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://assets/background.png" type="Texture" id=8]
 [ext_resource path="res://assets/animations/Lungs.tres" type="SpriteFrames" id=9]
 [ext_resource path="res://assets/brain.png" type="Texture" id=10]
+[ext_resource path="res://GameOverMenu.tscn" type="PackedScene" id=11]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
@@ -141,8 +142,13 @@ __meta__ = {
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 pause_mode = 2
 
-[node name="Menu" parent="CanvasLayer" instance=ExtResource( 5 )]
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource( 5 )]
 visible = false
+
+[node name="GameOverMenu" parent="CanvasLayer" instance=ExtResource( 11 )]
+visible = false
+[connection signal="all_organs_died" from="Organs" to="." method="_on_Organs_all_organs_died"]
+[connection signal="heart_died" from="Organs" to="." method="_on_Organs_heart_died"]
 
 [editable path="Organs/intestines"]
 

@@ -4,6 +4,7 @@ onready var main = get_node("../..")
 
 const transparant := Color(1, 1, 1, 0.5)
 
+
 func _unhandled_key_input(event):
 	if event.scancode == KEY_ESCAPE and event.pressed:
 		_toggle_pause()
@@ -25,3 +26,9 @@ func _on_Quit_pressed():
 
 func _on_Resume_pressed():
 	_toggle_pause()
+
+
+func _on_Restart_pressed():
+	_toggle_pause()
+# warning-ignore:return_value_discarded
+	get_tree().change_scene("res://Main.tscn")

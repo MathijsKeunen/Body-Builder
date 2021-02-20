@@ -29,6 +29,13 @@ func _process(delta):
 			parent.add_score(delta)
 
 
+func _unhandled_key_input(event):
+	if event.scancode == KEY_H:
+		emit_signal("heart_died")
+	elif event.scancode == KEY_O:
+		emit_signal("all_organs_died")
+
+
 func _on_organ_died() -> void:
 	if not heart.is_alive():
 		emit_signal("heart_died")

@@ -52,6 +52,7 @@ _global_script_class_icons={
 
 config/name="Body Builder"
 run/main_scene="res://StartMenu.tscn"
+boot_splash/image="res://splash.png"
 
 [display]
 
