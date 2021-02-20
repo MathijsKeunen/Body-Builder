@@ -1,10 +1,10 @@
 extends Node2D
 class_name Veins
 
-const snap_distance = pow(20, 2)
+const snap_distance = pow(10, 2)
 const cut_segemt_size = 10
 const vein_segment_size = 10
-const MIN_LENGTH = 100
+const MIN_LENGTH = 10
 
 onready var net_number = get_parent().net_number
 
@@ -176,6 +176,7 @@ func _endable(old: Line2D, old_index: int, new: Vein, new_index: int) -> bool:
 		var old_p = old.get_indices()[old_index]
 		var new_p = new.get_indices()[new_index]
 		if old_p == new_p:
+			print("point 1")
 			return false
 	return new.points.size() >= MIN_LENGTH
 

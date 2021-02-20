@@ -28,8 +28,8 @@ func get_end_index() -> int:
 
 func set_dummy_index(i: int) -> void:
 	$dummy/dummy.text = str(i)
-	if i >= 0:
-		$dummy.visible = true
+#	if i >= 0:
+#		$dummy.visible = true
 
 func get_dummy_index() -> int:
 	return int($dummy/dummy.text)
