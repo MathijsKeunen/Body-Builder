@@ -28,6 +28,11 @@ func _ready():
 		organ.set_astar_index(net_number, p)
 
 
+func cut():
+	_cut_veins(cut_line)
+	cut_line.clear_points()
+
+
 func _unhandled_input(event: InputEvent):
 	if event is InputEventMouseButton:
 		active_vein = null
@@ -48,18 +53,17 @@ func _unhandled_input(event: InputEvent):
 			if event.pressed:
 				cut_line.add_point(event.position)
 			else:
-				_cut_veins(cut_line)
-				cut_line.clear_points()
+				cut()
 	
 	elif event is InputEventMouseMotion:
-		if event.button_mask == BUTTON_MASK_RIGHT:
+		if event.button_mask == BUTTON_MASK_RIGHT and not cut_line.points.empty():
 			var mouse_position = event.position
 			var last_point = cut_line.points[-1]
 			var delta = (mouse_position - last_point).normalized() * cut_segemt_size
 			var distance = last_point.distance_to(mouse_position)
 			for i in range(int(distance / cut_segemt_size) - 1, -1, -1):
 				var new_position = mouse_position - i * delta
-				cut_line.add_point(new_position, current_index)
+				cut_line.add_point(new_position, -1)
 		
 		elif event.button_mask == BUTTON_MASK_LEFT and active_vein:
 			# New vein started in the middle of another vein
@@ -141,8 +145,9 @@ func _get_closest_point(point: Vector2, with_endpoints:=true) -> Array:
 	if with_endpoints:
 		for p in organ_connections.keys():
 			var connection = astar.get_point_position(p)
-			if connection.distance_squared_to(point) < snap_distance:
-				return [organ_connections[p], -1]
+			var organ = organ_connections[p]
+			if organ.is_alive() and connection.distance_squared_to(point) < snap_distance:
+				return [organ, -1]
 	for vein in get_children():
 		if vein is Vein:
 			var points: PoolVector2Array = vein.get_points()
@@ -176,7 +181,6 @@ func _endable(old: Line2D, old_index: int, new: Vein, new_index: int) -> bool:
 		var old_p = old.get_indices()[old_index]
 		var new_p = new.get_indices()[new_index]
 		if old_p == new_p:
-			print("point 1")
 			return false
 	return new.points.size() >= MIN_LENGTH
 
@@ -415,11 +419,9 @@ func reparent_virus(virus: Virus):
 	else:
 		print("failed to reparent virus")
 	
-	if p in organ_connections.keys():
-		var organ = organ_connections[p]
-		if organ.is_alive():
-			organ.do_damage()
-			parent.remove_child(virus)
+	if p in organ_connections.keys() and organ_connections[p].is_alive():
+		organ_connections[p].do_damage()
+		parent.remove_child(virus)
 	
 	else:
 # warning-ignore:unassigned_variable

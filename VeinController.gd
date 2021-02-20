@@ -1,5 +1,7 @@
 extends Node2D
 
+signal veins_switched
+
 const TRANSPARANT = Color(1, 1, 1, 0.3)
 
 
@@ -8,20 +10,23 @@ func _ready():
 
 
 func _switch_vein_net():
+	emit_signal("veins_switched")
 	var first = get_child(1)
 	var last = get_child(0)
 	move_child(first, 0)
-#	first.modulate = TRANSPARANT
-#	last.modulate = Color.white
 	first.enable(false)
 	last.enable(true)
-#	first.set_process_unhandled_input(false)
-#	last.set_process_unhandled_input(true)
 
 
 func _unhandled_key_input(event):
 	if event.pressed and not event.echo and event.scancode == KEY_SPACE:
 		_switch_vein_net()
+
+
+func _on_Organ_mouse_entered():
+	for net in get_children():
+		if net is VeinNet:
+			net.get_node("Veins").active_vein = null
 
 
 func are_connected(first: Organ, second: Organ) -> bool:

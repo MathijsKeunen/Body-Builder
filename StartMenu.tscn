@@ -35,9 +35,9 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
 margin_left = 729.0
-margin_top = 396.0
+margin_top = 430.0
 margin_right = 1190.0
-margin_bottom = 684.0
+margin_bottom = 650.0
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
 margin_right = 461.0
@@ -59,6 +59,7 @@ margin_bottom = 220.0
 text = "HELP"
 
 [node name="Quit" parent="CenterContainer/VBoxContainer" instance=ExtResource( 3 )]
+visible = false
 margin_top = 224.0
 margin_right = 461.0
 margin_bottom = 288.0
@@ -73,25 +74,25 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer2"]
-margin_left = 710.0
+margin_left = 560.0
 margin_top = 306.0
-margin_right = 1210.0
+margin_right = 1360.0
 margin_bottom = 774.0
 
 [node name="Back" parent="CenterContainer2/VBoxContainer" instance=ExtResource( 3 )]
-margin_right = 500.0
+margin_right = 800.0
 text = "BACK"
 
 [node name="TextEdit" type="TextEdit" parent="CenterContainer2/VBoxContainer"]
 margin_top = 68.0
-margin_right = 500.0
+margin_right = 800.0
 margin_bottom = 468.0
-rect_min_size = Vector2( 500, 400 )
-text = "Connect all organs to the heart by drawing blood veins with the left mouse button. Make sure to connect both the red and the blue vein so the blood can circulate.
+rect_min_size = Vector2( 800, 400 )
+text = "Connect all organs to the heart by drawing blood veins with the left mouse button. Make sure to connect both the red and the blue vein so the blood can circulate. Switch between red and blue by hitting the space bar.
 
 Watch out for viruses! When a virus reaches an organ, it will be damaged. To prevent that, cut of the infected veins with the right mouse button.
 
-Try to keep the organs alive as long as possible. Take extra care of the heart because the other organs can't survive without it!"
+Try to keep the organs alive for as long as possible. Take extra care of the heart because the other organs can't survive without it!"
 readonly = true
 context_menu_enabled = false
 shortcut_keys_enabled = false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://VeinNet.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Organ.tscn" type="PackedScene" id=2]
@@ -11,6 +11,8 @@
 [ext_resource path="res://assets/animations/Lungs.tres" type="SpriteFrames" id=9]
 [ext_resource path="res://assets/brain.png" type="Texture" id=10]
 [ext_resource path="res://GameOverMenu.tscn" type="PackedScene" id=11]
+[ext_resource path="res://assets/heartbeat.ogg" type="AudioStream" id=12]
+[ext_resource path="res://default_theme.tres" type="Theme" id=13]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
@@ -84,6 +86,15 @@ script = ExtResource( 7 )
 position = Vector2( 199.64, 887.596 )
 points = PoolVector2Array( -43.7522, -148.314, -106.049, -139.334 )
 
+[node name="HealthBar" parent="Organs/Heart" index="1"]
+margin_left = -16.3122
+margin_top = -102.228
+margin_right = 18.6878
+margin_bottom = -92.2282
+
+[node name="CollisionShape2D" parent="Organs/Heart/Area2D" index="0"]
+polygon = PoolVector2Array( -16.7168, -111.234, 28.6677, -113.236, 80.3348, -106.707, 112.095, -80.5323, 126.778, -28.4736, 117.435, 26.9223, 77.3894, 85.6552, 29.3351, 131.04, -3.36842, 156.402, -36.072, 129.705, -85.4611, 88.9924, -122.837, 34.9313, -134.85, -34.4803, -119.499, -87.2065, -78.7869, -113.903, -41.4114, -110.566 )
+
 [node name="intestines" parent="Organs" instance=ExtResource( 2 )]
 position = Vector2( 265.671, 198.751 )
 points = PoolVector2Array( -92.6416, 108.171, 98.0617, -111.137 )
@@ -94,13 +105,16 @@ animation = "default"
 frame = 2
 
 [node name="HealthBar" parent="Organs/intestines" index="1"]
-margin_left = -8.5694
-margin_top = 58.0474
-margin_right = 61.4306
-margin_bottom = 68.0474
+margin_left = 53.7401
+margin_top = 44.1751
+margin_right = 88.7401
+margin_bottom = 54.1751
+
+[node name="CollisionShape2D" parent="Organs/intestines/Area2D" index="0"]
+polygon = PoolVector2Array( -116.031, -122.653, 3.66101, -122.023, 26.9695, -90.5251, 31.3793, -79.1858, 76.1065, -86.7453, 110.124, -68.4764, 132.173, -32.5687, 115.164, 7.74879, 112.644, 32.3172, 132.173, 32.9472, 130.913, 70.1149, 117.054, 73.2647, 117.054, 97.8332, 91.2255, 131.221, 37.0489, 133.741, -24.6872, 123.662, -30.3568, 77.6744, -93.9829, 70.7448, -127.371, 32.9472, -131.151, -62.8068 )
 
 [node name="Lungs" parent="Organs" instance=ExtResource( 2 )]
-position = Vector2( 1013.4, 530.423 )
+position = Vector2( 1227.7, 695.513 )
 points = PoolVector2Array( 4.14343, 69.3401, -36.8566, -89.6599 )
 
 [node name="Organ" parent="Organs/Lungs" index="0"]
@@ -108,10 +122,13 @@ frames = ExtResource( 9 )
 animation = "default"
 
 [node name="HealthBar" parent="Organs/Lungs" index="1"]
-margin_left = 22.895
-margin_top = -84.2918
-margin_right = 92.895
-margin_bottom = -74.2918
+margin_left = 14.395
+margin_top = -77.7918
+margin_right = 49.395
+margin_bottom = -67.7918
+
+[node name="CollisionShape2D" parent="Organs/Lungs/Area2D" index="0"]
+polygon = PoolVector2Array( -50.9, -69.923, -14.9921, -65.7825, -13.9, -94.423, 12.1, -96.423, 12.6, -87.923, 91.1, -87.923, 93.1, -51.923, 77.1, -50.423, 94.448, -16.3942, 127.561, 42.5352, 128.1, 85.077, 109.6, 96.577, 41.6, 74.077, 17.1, 52.577, 15.1, 22.577, -14.9, 26.577, -23.4, 65.577, -105.4, 96.077, -125.4, 90.577, -131.4, 51.577, -115.9, 5.07703, -89.4, -30.923, -72.4, -63.923 )
 
 [node name="Brain" parent="Organs" instance=ExtResource( 2 )]
 position = Vector2( 1739.13, 339.866 )
@@ -122,22 +139,13 @@ frames = SubResource( 9 )
 animation = "default"
 
 [node name="HealthBar" parent="Organs/Brain" index="1"]
-margin_left = -106.022
-margin_top = -114.012
-margin_right = -36.0217
-margin_bottom = -104.012
+margin_left = -110.779
+margin_top = -82.498
+margin_right = -75.7789
+margin_bottom = -72.498
 
-[node name="Score" type="Label" parent="."]
-anchor_right = 1.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 1920, 0 )
-text = "0"
-align = 1
-valign = 1
-max_lines_visible = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="CollisionShape2D" parent="Organs/Brain/Area2D" index="0"]
+polygon = PoolVector2Array( -134.576, -8.35333, -132.63, -42.866, -116.642, -69.2332, -116.642, -89.5265, -47.2675, -89.9985, -24.6145, -96.1336, 31.546, -92.3582, 103.28, -59.7945, 135.844, 9.10834, 129.237, 47.8072, 101.393, 75.6515, 55.6147, 82.7306, -9.51257, 63.8531, -39.2446, 37.4246, -94.4613, 19.019 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 pause_mode = 2
@@ -147,8 +155,45 @@ visible = false
 
 [node name="GameOverMenu" parent="CanvasLayer" instance=ExtResource( 11 )]
 visible = false
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 12 )
+autoplay = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+margin_right = 1920.0
+margin_bottom = 57.0
+theme = ExtResource( 13 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+margin_right = 958.0
+margin_bottom = 73.0
+size_flags_horizontal = 3
+custom_constants/margin_right = 18
+
+[node name="Label" type="Label" parent="HBoxContainer/MarginContainer"]
+margin_right = 940.0
+margin_bottom = 73.0
+size_flags_horizontal = 3
+text = "Score:"
+align = 2
+
+[node name="Score" type="Label" parent="HBoxContainer"]
+margin_left = 962.0
+margin_right = 1920.0
+margin_bottom = 73.0
+size_flags_horizontal = 3
+text = "0"
+[connection signal="veins_switched" from="VeinController" to="VeinController/Red" method="_on_veins_switched"]
+[connection signal="veins_switched" from="VeinController" to="VeinController/Blue" method="_on_veins_switched"]
 [connection signal="all_organs_died" from="Organs" to="." method="_on_Organs_all_organs_died"]
 [connection signal="heart_died" from="Organs" to="." method="_on_Organs_heart_died"]
+
+[editable path="Organs/Heart"]
 
 [editable path="Organs/intestines"]
 

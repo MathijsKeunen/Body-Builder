@@ -15,3 +15,7 @@ func enable(e: bool):
 
 func are_points_connected(a: int, b: int) -> bool:
 	return not $Veins.astar.get_id_path(a, b).empty()
+
+
+func _on_veins_switched():
+	$Veins.cut()

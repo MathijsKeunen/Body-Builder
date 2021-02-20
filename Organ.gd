@@ -2,6 +2,7 @@ extends Line2D
 class_name Organ
 
 signal died
+signal mouse_entered
 
 var active := false setget activate
 
@@ -18,9 +19,6 @@ func activate(a: bool) -> void:
 		active = false
 		organ.stop()
 
-
-func _ready():
-	print(global_position + points[0])
 
 func get_astar_index(net: int) -> int:
 	return astar_indices[net]
@@ -40,3 +38,7 @@ func do_damage() -> void:
 
 func is_alive() -> bool:
 	return healtbar.value > 0
+
+
+func _on_Area2D_mouse_entered():
+	emit_signal("mouse_entered")

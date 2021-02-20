@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var score_label: Label = $Score
+onready var score_label: Label = $HBoxContainer/Score
 onready var game_over_menu = $CanvasLayer/GameOverMenu
 
 var score: float = 0
